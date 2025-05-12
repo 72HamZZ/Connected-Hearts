@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connected Hearts: Communication Match-Up</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #c0392b;
+      margin-bottom: 25px;
+    }
+    .question {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #333;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #fdfdfd;
+    }
+    .feedback, .suggestion {
+      font-weight: 500;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .feedback {
+      background-color: #dff9fb;
+      color: #0984e3;
+    }
+    .suggestion {
+      background-color: #fef9e7;
+      color: #a04000;
+    }
+    button {
+      padding: 12px 20px;
+      margin-top: 20px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:first-of-type {
+      background-color: #6ab04c;
+      color: white;
+    }
+    button:last-of-type {
+      background-color: #d35400;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Connected Hearts: Communication Match-Up</h1>
+    <div id="game">
+      <!-- Questions will go here -->
+    </div>
+  </div>
+
+  <script>
+    const correctAnswers = {
+      q1: "Ineffective", q2: "Effective", q3: "Ineffective", q4: "Effective",
+      q5: "Ineffective", q6: "Effective", q7: "Ineffective", q8: "Effective",
+      q9: "Ineffective", q10: "Effective"
+    };
+
+    function buildQuestions() {
+      const questions = [
+        "You always ignore what I say.",
+        "I appreciate you trying, but I was hoping for a quiet evening.",
+        "Whatever. Do what you want.",
+        "Thanks for understanding how stressed I’ve been.",
+        "You always make things worse when we fight.",
+        "I feel like we’re not hearing each other. Can we slow down and try again?",
+        "You never care about what I need.",
+        "I know we disagree, but I still respect your opinion.",
+        "This is your fault, as usual.",
+        "Let’s figure out a way forward that works for both of us."
+      ];
+
+      const gameDiv = document.getElementById("game");
+      questions.forEach((text, index) => {
+        const qNum = index + 1;
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `
+          <label>${qNum}. "${text}"</label>
+          <select id="q${qNum}">
+            <option value="">-- Select --</option>
+            <option value="Effective">Effective</option>
+            <option value="Ineffective">Ineffective</option>
+          </select>
+        `;
+        gameDiv.appendChild(div);
+      });
+
+      const btn1 = document.createElement("button");
+      btn1.innerText = "Submit Answers";
+      btn1.onclick = checkAnswers;
+
+      const btn2 = document.createElement("button");
+      btn2.innerText = "Show Correct Answers";
+      btn2.onclick = showAnswers;
+
+      const feedback = document.createElement("div");
+      feedback.id = "feedback";
+      feedback.className = "feedback";
+
+      const suggestion = document.createElement("div");
+      suggestion.id = "suggestion";
+      suggestion.className = "suggestion";
+
+      gameDiv.appendChild(btn1);
+      gameDiv.appendChild(btn2);
+      gameDiv.appendChild(feedback);
+      gameDiv.appendChild(suggestion);
+    }
+
+    function checkAnswers() {
+      let feedback = "", suggestion = "", allCorrect = true;
+      for (let key in correctAnswers) {
+        const userAnswer = document.getElementById(key).value;
+        if (!userAnswer) {
+          feedback += `Question ${key.slice(1)} not answered.\n`;
+          allCorrect = false;
+        } else if (userAnswer !== correctAnswers[key]) {
+          feedback += `Question ${key.slice(1)} is incorrect.\n`;
+          suggestion += correctAnswers[key] === "Effective"
+            ? `Q${key.slice(1)}: Try using empathy, validation, and \"I\" statements.\n`
+            : `Q${key.slice(1)}: Avoid blame or dismissive responses.\n`;
+          allCorrect = false;
+        }
+      }
+      document.getElementById("feedback").textContent = allCorrect
+        ? "✅ All answers are correct! Great job practicing effective communication."
+        : feedback;
+      document.getElementById("suggestion").textContent = suggestion;
+    }
+
+    function showAnswers() {
+      for (let key in correctAnswers) {
+        document.getElementById(key).value = correctAnswers[key];
+      }
+      document.getElementById("feedback").textContent = "✅ Correct answers have been filled in.";
+      document.getElementById("suggestion").textContent = "📝 Review how effective communication shows empathy, validation, and clarity.";
+    }
+
+    window.onload = buildQuestions;
+  </script>
+</body>
+</html>
